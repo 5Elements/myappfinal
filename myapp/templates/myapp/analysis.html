@@ -1,0 +1,208 @@
+{% extends 'templates/myapp/header.html' %}
+
+{% block content %}
+
+<style type="text/css">
+
+.ct-series-b .ct-slice-donut-solid {
+  /* give the donut slice a custom colour */
+  fill: green !important;
+  /* customize stroke width of the donut slices in CSS. Note that this property is already set in JavaScript and label positioning also relies on this. In the right situation though it can be very useful to style this property. You need to use !important to override the style attribute */
+  stroke-width: 5px !important;
+  /* create modern looking rounded donut charts */
+  stroke-linecap: round;
+}
+
+  .ct-series-a .ct-line,
+.ct-series-a .ct-point {
+  stroke: red;
+}
+
+.ct-series-b .ct-line,
+.ct-series-b .ct-point {
+  stroke: green;
+}
+</style>
+    <div class="container paddingTop100">
+<h3><i class="fa fa-bars text-primary"></i> Results</h3>
+<hr>
+        <div class="card bg-light mb-3" style="">
+            <div class="card-header"><h4><b>Stats</b></h4></div>
+  <div class="card-body">
+        <div class="row" id="inforow">
+
+            <div class="col-3">
+                <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+  <div class="card-body">
+    <h4 class="card-title"><i class="fa fa-hashtag"></i> Tags</h4>
+    <p class="card-text">{{tag}}</p>
+  </div>
+</div>
+                <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+  <div class="card-body">
+    <h4 class="card-title"><i class="fa fa-twitter-square"></i> Tweets Analyzed</h4>
+    <p class="card-text">{{ count }}</p>
+  </div>
+</div>
+            </div>
+            <div class="col">
+              <div class="ct-chart ct-perfect-fourth"></div>
+            </div>
+             <div class="col">
+              <div class="ct-chart-2 ct-perfect-fourth"></div>
+            </div>
+
+        </div>
+</div>
+</div>
+        <h3><i class="fa fa-twitter text-primary"></i> Tweets</h3>
+        <hr>
+<ul class="nav nav-pills nav-justified" id="pills-tab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><h5><i class="fa fa-thumbs-up"></i> POSITIVE</h5></a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false"><h5><i class="fa fa-thumbs-down"></i> NEGATIVE</h5></a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false"><h5><i class="fa fa-hand-o-right"></i> NEUTRAL</h5></a>
+  </li>
+</ul>
+<hr>
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div class="row">
+
+                   {% for item in tweet_list %}
+                    {% if item.polarity > 0 %}
+        <div class="card bg-light mb-3" style="">
+  <div class="card-body">
+<div class="media">
+  <img class="align-self-start mr-3 rounded-circle" src="{{item.proimg}}" alt="Generic placeholder image">
+  <div class="media-body">
+    <h2 class="mt-0">@{{item.user}}</h2>
+     <b class="text-muted">{{item.desc}}</b><br>
+    <h4>{{item.tweet}}</h4>
+    <b class="text-muted">{{item.created_at}}</b>
+  </div>
+</div>
+  </div>
+</div>
+                    {% endif %}
+                {% endfor %}
+
+</div>
+  </div>
+  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <div class="row">
+
+                   {% for item in tweet_list %}
+                    {% if item.polarity < 0 %}
+        <div class="card bg-light mb-3" style="">
+  <div class="card-body">
+<div class="media">
+  <img class="align-self-start mr-3 rounded-circle" src="{{item.proimg}}" alt="Generic placeholder image">
+  <div class="media-body">
+    <h2 class="mt-0">@{{item.user}}</h2>
+     <b class="text-muted">{{item.desc}}</b><br>
+    <h4>{{item.tweet}}</h4>
+    <b class="text-muted">{{item.created_at}}</b>
+  </div>
+</div>
+  </div>
+</div>
+                    {% endif %}
+                {% endfor %}
+
+</div>
+  </div>
+  <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+        <div class="row">
+
+                   {% for item in tweet_list %}
+                    {% if item.polarity == 0 %}
+        <div class="card bg-light mb-3" style="">
+  <div class="card-body">
+<div class="media">
+  <img class="align-self-start mr-3 rounded-circle" src="{{item.proimg}}" alt="Generic placeholder image">
+  <div class="media-body">
+    <h2 class="mt-0">@{{item.user}}</h2>
+     <b class="text-muted">{{item.desc}}</b><br>
+    <h4>{{item.tweet}}</h4>
+    <b class="text-muted">{{item.created_at}}</b>
+  </div>
+</div>
+  </div>
+</div>
+                    {% endif %}
+                {% endfor %}
+
+</div>
+<div>
+</div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+    var data = [0,0,0];
+               var i = 0;
+            {% for value in pie_list %}
+                data[i] = {{ value }}
+                    i = i + 1;
+            {% endfor %}
+            console.log(data);
+new Chartist.Pie('.ct-chart', {
+    
+  series: [data[2],data[1],data[0]]
+}, {
+  donut: true,
+  donutWidth: 60,
+  donutSolid: true,
+  startAngle: 270,
+  showLabel: true
+});
+var datasets = [];
+            var i = 0;
+            var pos = [], neg = [], net = [];
+            {% for item in tweet_list %}
+                {% if item.polarity > 0 %}
+                    pos.push({{ item.polarity }});
+                {% elif item.polarity < 0 %}
+                    neg.push({{ item.polarity }});
+                {% else %}
+                    net.push({{ item.polarity }});
+                {% endif %}
+            {% endfor %}
+
+            datasets[1] = pos.slice(0);
+            datasets[0] = neg.slice(0);
+            datasets[2] = net.slice(0);
+new Chartist.Line('.ct-chart-2', {
+  labels: [],
+  series: [
+    datasets[0],
+    datasets[1],
+    datasets[2]
+  ]
+}, {
+  fullWidth: true,
+  chartPadding: {
+    right: 40
+  }
+});
+</script>
+
+
+
+    </div>
+
+
+
+
+
+
+
+{% endblock %}

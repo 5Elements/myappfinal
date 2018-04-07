@@ -1,0 +1,31 @@
+{% extends 'templates/myapp/header.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+ <div class="col-6">
+                
+                    <h2><i class="fa fa-twitter text-primary"></i> Analyze Tweets</h2>
+
+
+                <form autocomplete="off"  method="GET"
+                      action="/analyze">
+                    <div >
+                        <input name="tags" class="form-control"
+                               type="text" id="searchLabel" placeholder="Keywords Here..">
+                    </div>
+                    <br>
+                    <button type="submit"  id="sButton" class="btn btn-primary">
+                        <i class="fa fa-search"></i> Analyze
+                    </button>
+                     <a class="btn btn-primary" href="/saved">
+                        <i class="fa fa-download"></i> Saved Tweets
+                    </a>
+                </form>
+                <hr>
+                <h4 class="text-muted">By Mudit</h4>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
